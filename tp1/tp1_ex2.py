@@ -27,6 +27,9 @@ class Point:
             self.cl = 1
         else:
             self.cl = -1
+            
+    def getClass(self):
+        return self.cl
         
     def toString(self):
         return self.x1,self.x2,self.cl
@@ -37,7 +40,7 @@ def buildDataset():
         p = Point(numpy.random.random(), numpy.random.random())
         p.setClass()
         dataset.append(p)
-        print(p.toString())
+#        print(p.toString())
     
 
 def sign(x):
@@ -67,10 +70,7 @@ def ptrain():
 
 
 def ptest(x):
-    xplus = numpy.array()
-    for i in range(len(x)):
-        xplus.append(x[1])
-    xplus.append(1);
+    xplus = numpy.array([x.x1, x.x2, 1])
     return sign(numpy.vdot(xplus, theta))
 
 buildDataset()
@@ -103,4 +103,16 @@ b = theta[2]
 print(w1, w2, b)
     
 plt.plot([(-w1*x - b) / w2 for x in range(2)], color="black")
+
+total = 0
+for i in range(100):
+    cpt = 0
+    for p in dtest:
+        real = p.getClass()
+        pred = ptest(p)
+        if pred == real:
+            cpt += 1
+#        print("classe reelle : ", real, " ,classe prédite : ", pred)
+    total += cpt/len(dtest) * 100
     
+print(total/100, "% de bonne classification")
