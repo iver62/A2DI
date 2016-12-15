@@ -35,7 +35,7 @@ class Point:
         return self.x1,self.x2,self.cl
 
 
-def buildDataset():
+def datagen():
     for i in range(nbPoints):
         p = Point(numpy.random.random(), numpy.random.random())
         p.setClass()
@@ -73,7 +73,7 @@ def ptest(x):
     xplus = numpy.array([x.x1, x.x2, 1])
     return sign(numpy.vdot(xplus, theta))
 
-buildDataset()
+datagen()
     
 xNeg = list()
 yNeg = list()
