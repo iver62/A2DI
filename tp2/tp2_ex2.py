@@ -9,37 +9,37 @@ import numpy as np
 import random as rd
 import matplotlib.pyplot as plt
 
-from tp1_ex2.py import ptrain, ptest, Point
+#from tp1_ex2.py import ptrain, ptest, Point
 
 dataset = list()
 
 def datagen(n):
-    X_train = np.ndarray()
-    X_test = np.ndarray()
-    c_train = np.array()
-    c_test = np.array()
+    X_train = np.ndarray(2)
+    X_test = np.ndarray(2)
+    c_train = list()
+    c_test = list()
     for i in range(n):
         p = [np.random.random(), np.random.random()]
         dataset.append(p)
-    rd.random_shuffle(dataset)
-    X_train = dataset[:n*0.1]
-    X_test = dataset[n*0.1:]
+    rd.shuffle(dataset)
+    X_train = dataset[:int(n*0.1)]
+    X_test = dataset[-int(n*0.9):]
     for i in range(len(X_train)):
-        if (-X_train[i][0]/2 + 0.75) <= -X_train[i][1]:
+        if (-X_train[i][0]/2 + 0.75) <= X_train[i][1]:
             c_train.append(1)
         else:
             c_train.append(-1)
     for i in range(len(X_test)):
-        if (-X_test[i][0]/2 + 0.75) <= -X_test[i][1]:
+        if (-X_test[i][0]/2 + 0.75) <= X_test[i][1]:
             c_test.append(1)
         else:
             c_test.append(-1)
     return X_train, X_test, c_train, c_test
     
-def get_test_err(X_train, X_test, c_train, c_test, n):
+#def get_test_err(X_train, X_test, c_train, c_test, n):
     
     
-X_train, X_test, c_train, c_test = datagen()
+X_train, X_test, c_train, c_test = datagen(200)
 
 err=list()
 maxi=25
