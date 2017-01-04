@@ -9,8 +9,6 @@ import numpy as np
 import random as rd
 import matplotlib.pyplot as plt
 
-#from tp1_ex2.py import ptrain, ptest, Point
-
 dataset = list()
 
 def datagen(n):
@@ -36,15 +34,44 @@ def datagen(n):
             c_test.append(-1)
     return X_train, X_test, c_train, c_test
     
-#def get_test_err(X_train, X_test, c_train, c_test, n):
+def get_test_err():
+    cpt = 0
+    for i in range(0, len(X_test)):
+        real = c_test[i]
+        pred = ptest(X_test[i])
+        if pred != real:
+            cpt += 1
+    return cpt / len(X_test) * 100
     
+ 
+def ptrain():
+    theta = np.array([np.random.random(),np.random.random(),np.random.random()])
+    i = 0
+    while i < len(X_train):
+        xplus = np.array([X_train[i][0], X_train[i][1], 1])
+        if sign(np.vdot(theta, xplus)) == c_train[i]:
+            i += 1
+        else:
+            theta = theta + c_train[i]*xplus
+            i = 0
+    return theta
+
+
+def ptest(p):
+    xplus = np.array([p[0], p[1], 1])
+    return sign(np.vdot(xplus, ptrain()))
+    
+def sign(x):
+    if x >= 0:
+        return 1
+    return -1
     
 X_train, X_test, c_train, c_test = datagen(200)
 
 err=list()
 maxi=25
 bin_size=0.5
-bins=np.arrange(0.0,np.ceil(maxi+1),bin_size)
+bins=np.arange(0.0,np.ceil(maxi+1),bin_size)
 bin_centers=bins[:-1]+bin_size/2
 crit=1.0
 perr=np.ones(bin_centers.shape)

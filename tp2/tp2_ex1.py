@@ -72,17 +72,17 @@ print('moment centré d\'ordre 3 : ',st.skew(taille_h))
 print('moment centré d\'ordre 3 : ',st.skew(taille_f))
 
 #Q8
-tab = np.ndarray();
-mu = 140
-sigma = 10
-i = 0
-j = 0
-while mu <= 220:
-    while sig <= 40:
-        tab[i][j] = NLL(mu, sigma)
-        j += 1
-        sig = sig + 0.2
-    i += 1
-    mu += 1
-        
-def NLL(mu, sigma):
+#tab = np.ndarray();
+#mu = 140
+#sigma = 10
+#i = 0
+#j = 0
+#while mu <= 220:
+#    while sig <= 40:
+#        tab[i][j] = NLL(mu, sigma)
+#        j += 1
+#        sig = sig + 0.2
+#    i += 1
+#    mu += 1
+#        
+#def NLL(mu, sigma):
