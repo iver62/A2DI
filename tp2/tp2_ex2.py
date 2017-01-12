@@ -1,88 +1,75 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec 14 16:19:50 2016
-
-@author: deshayes
-"""
-
 import numpy as np
-import random as rd
 import matplotlib.pyplot as plt
 
-dataset = list()
-
 def datagen(n):
-    X_train = np.ndarray(2)
-    X_test = np.ndarray(2)
-    c_train = list()
-    c_test = list()
-    for i in range(n):
+    X_train = np.zeros(shape=(int(0.1*n),2))
+    X_test = np.zeros(shape=(int(0.9*n),2))
+    c_train = np.zeros(int(0.1*n), dtype=int)
+    c_test = np.zeros(int(0.9*n), dtype=int)
+    for i in range(int(n*0.1)):
         p = [np.random.random(), np.random.random()]
-        dataset.append(p)
-    rd.shuffle(dataset)
-    X_train = dataset[:int(n*0.1)]
-    X_test = dataset[-int(n*0.9):]
-    for i in range(len(X_train)):
-        if (-X_train[i][0]/2 + 0.75) <= X_train[i][1]:
-            c_train.append(1)
+        X_train[i] = p
+        if (-p[0]/2 + 0.75) <= p[1]:
+            c_train[i] = 1
         else:
-            c_train.append(-1)
-    for i in range(len(X_test)):
-        if (-X_test[i][0]/2 + 0.75) <= X_test[i][1]:
-            c_test.append(1)
+            c_train[i] = -1
+    for i in range(int(n*0.9)):
+        p = [np.random.random(), np.random.random()]
+        X_test[i] = p
+        if (-p[0]/2 + 0.75) <= p[1]:
+            c_test[i] = 1
         else:
-            c_test.append(-1)
+            c_test[i] = -1
     return X_train, X_test, c_train, c_test
     
-def get_test_err():
+def get_test_err(n):
+    X_train, X_test, c_train, c_test = datagen(n)
+    theta = ptrain(X_train, c_train)
     cpt = 0
-    for i in range(0, len(X_test)):
+    for i in range(len(X_test)):
         real = c_test[i]
-        pred = ptest(X_test[i])
+        pred = ptest(X_test[i], theta)
         if pred != real:
             cpt += 1
     return cpt / len(X_test) * 100
     
  
-def ptrain():
-    theta = np.array([np.random.random(),np.random.random(),np.random.random()])
-    i = 0
+def ptrain(X_train, c_train):
+    theta = np.array([np.random.random() for i in range(3)])
+    i=0
     while i < len(X_train):
-        xplus = np.array([X_train[i][0], X_train[i][1], 1])
-        if sign(np.vdot(theta, xplus)) == c_train[i]:
+        x_plus = np.array([X_train[i][0], X_train[i][1], 1])
+        if sign(np.vdot(theta, x_plus)) == c_train[i]:
             i += 1
         else:
-            theta = theta + c_train[i]*xplus
+            theta = theta + c_train[i]*x_plus
             i = 0
     return theta
-
-
-def ptest(p):
-    xplus = np.array([p[0], p[1], 1])
-    return sign(np.vdot(xplus, ptrain()))
     
 def sign(x):
     if x >= 0:
         return 1
     return -1
     
-X_train, X_test, c_train, c_test = datagen(200)
-
+def ptest(x, theta):
+    x_plus = np.array([x[0], x[1], 1])
+    return sign(np.vdot(x_plus, theta))
+    
 err=list()
 maxi=25
 bin_size=0.5
 bins=np.arange(0.0,np.ceil(maxi+1),bin_size)
 bin_centers=bins[:-1]+bin_size/2
-crit=1.0
+#crit=1.0
 perr=np.ones(bin_centers.shape)
-count=0
-while crit < 0.001:
-    for i in range(20):
-        err.append(get_test_err(445))
-    perr_old=perr
-    (perr,bins_out) = np.histogram(err, bins=bins, normed=True)
-    crit = np.max(np.abs(perr-perr_old))
-    count += 1
+#count=0
+#while crit < 0.001:
+for i in range(100):
+    err.append(get_test_err(445))
+perr_old=perr
+(perr,bins_out) = np.histogram(err, bins=bins, normed=True)
+#crit = np.max(np.abs(perr-perr_old))
+#count += 1
     
 plt.figure()
 plt.bar(bins[:-1], perr, width=bin_size)

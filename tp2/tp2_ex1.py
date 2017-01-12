@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 30 15:37:06 2016
-
-@author: deshayes
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats.stats as st
@@ -17,6 +10,7 @@ taille_f = np.loadtxt("taille_f.txt")
 maxi = max(np.max(taille_h), np.max(taille_f))
 bins = np.arange(100.0, np.ceil(maxi+1)) - 0.5
 bin_centers = bins[:-1] + 0.5
+
 (pX1h, bins_out) = np.histogram(taille_h, bins=bins, normed=True)
 plt.figure()
 plt.bar(bins[:-1], pX1h, width=1.0)
