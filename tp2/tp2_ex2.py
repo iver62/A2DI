@@ -2,21 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def datagen(n):
-    X_train = np.zeros(shape=(int(0.1*n),2))
-    X_test = np.zeros(shape=(int(0.9*n),2))
-    c_train = np.zeros(int(0.1*n), dtype=int)
-    c_test = np.zeros(int(0.9*n), dtype=int)
-    for i in range(int(n*0.1)):
-        p = [np.random.random(), np.random.random()]
-        X_train[i] = p
-        if (-p[0]/2 + 0.75) <= p[1]:
+    X_train = np.random.rand(int(0.2*n),2)
+    X_test = np.random.rand(int(0.8*n),2)
+    c_train = np.zeros(len(X_train), dtype=int)
+    c_test = np.zeros(len(X_test), dtype=int)
+    for i in range(len(X_train)):
+        if (-X_train[i][0]/2 + 0.75) <= X_train[i][1]:
             c_train[i] = 1
         else:
             c_train[i] = -1
-    for i in range(int(n*0.9)):
-        p = [np.random.random(), np.random.random()]
-        X_test[i] = p
-        if (-p[0]/2 + 0.75) <= p[1]:
+    for i in range(len(X_test)):
+        if (-X_test[i][0]/2 + 0.75) <= X_test[i][1]:
             c_test[i] = 1
         else:
             c_test[i] = -1
@@ -64,7 +60,7 @@ bin_centers=bins[:-1]+bin_size/2
 perr=np.ones(bin_centers.shape)
 #count=0
 #while crit < 0.001:
-for i in range(100):
+for i in range(20):
     err.append(get_test_err(445))
 perr_old=perr
 (perr,bins_out) = np.histogram(err, bins=bins, normed=True)
