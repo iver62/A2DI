@@ -4,7 +4,6 @@ from sklearn import datasets
 from scipy.spatial import distance
 
 data=datasets.load_iris()
-
 n=len(data.data)
 nb_class=len(data.target_names)
 d=len(data.feature_names)
@@ -20,7 +19,7 @@ def split(X, C):
     d_test=list()
     c_test=list()
     for i in range(len(X)):
-        if (i % 2 == 0):
+        if (i%2 == 0):
             d_app.append(X[i])
             c_app.append(C[i])
         else:

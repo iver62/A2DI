@@ -2,20 +2,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def datagen(n):
-    X_train = np.random.rand(int(0.2*n),2)
-    X_test = np.random.rand(int(0.8*n),2)
-    c_train = np.zeros(len(X_train), dtype=int)
-    c_test = np.zeros(len(X_test), dtype=int)
+    X_train=np.random.rand(int(0.2*n),2)
+    X_test=np.random.rand(int(0.8*n),2)
+    c_train=np.empty(0, dtype=int)
+    c_test=np.empty(0, dtype=int)
     for i in range(len(X_train)):
         if (-X_train[i][0]/2 + 0.75) <= X_train[i][1]:
-            c_train[i] = 1
+            c_train=np.append(c_train,1)
         else:
-            c_train[i] = -1
+            c_train=np.append(c_train,-1)
     for i in range(len(X_test)):
         if (-X_test[i][0]/2 + 0.75) <= X_test[i][1]:
-            c_test[i] = 1
+            c_test=np.append(c_test,1)
         else:
-            c_test[i] = -1
+            c_test=np.append(c_test,-1)
     return X_train, X_test, c_train, c_test
     
 def get_test_err(n):
@@ -31,10 +31,10 @@ def get_test_err(n):
     
  
 def ptrain(X_train, c_train):
-    theta = np.array([np.random.random() for i in range(3)])
+    theta=np.random.rand(3)
     i=0
     while i < len(X_train):
-        x_plus = np.array([X_train[i][0], X_train[i][1], 1])
+        x_plus=np.append(X_train[i],1)
         if sign(np.vdot(theta, x_plus)) == c_train[i]:
             i += 1
         else:
@@ -48,7 +48,7 @@ def sign(x):
     return -1
     
 def ptest(x, theta):
-    x_plus = np.array([x[0], x[1], 1])
+    x_plus=np.append(x,1)
     return sign(np.vdot(x_plus, theta))
     
 err=list()
@@ -61,6 +61,7 @@ perr=np.ones(bin_centers.shape)
 #count=0
 #while crit < 0.001:
 for i in range(20):
+#    print(i)
     err.append(get_test_err(445))
 perr_old=perr
 (perr,bins_out) = np.histogram(err, bins=bins, normed=True)
