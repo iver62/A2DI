@@ -18,7 +18,28 @@ def datagen(n):
             c[i] = 1-c[i]
     c=np.asarray(c)
     return X, c
-        
+
+def aff_dataset(X_train, X_test, c_train, c_test):
+    x_pos=list()
+    y_pos=list()
+    x_neg=list()
+    y_neg=list()
+    for i in range(len(X_train[0])):
+        if c_train[i]==1:
+            x_pos.append(X_train[0][i])
+            y_pos.append(X_train[1][i])
+        else:
+            x_neg.append(X_train[0][i])
+            y_neg.append(X_train[1][i])
+    for i in range(len(X_test[0])):
+        if c_test[i]==1:
+            x_pos.append(X_test[0][i])
+            y_pos.append(X_test[1][i])
+        else:
+            x_neg.append(X_test[0][i])
+            y_neg.append(X_test[1][i])
+    plt.plot(x_neg,y_neg,'.r',x_pos,y_pos,'.b')
+      
 #def kfold_data(X, c, k, n_class):
 #    d,n = X.shape
 #    X_train_folds=[]
@@ -29,3 +50,5 @@ def datagen(n):
 #    for i in range(k):
         
 X,c=datagen(300)
+plt.plot(X[0],X[1],'.')
+aff_dataset(X[:,:int(0.2*len(X))],X[:,int(0.2*len(X)):],c[:int(0.2*len(X))],c[int(0.2*len(X)):])

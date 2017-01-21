@@ -2,60 +2,65 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def datagen(n):
-    dataset=list()
+    X=np.random.random((2,n))
+    classes=np.empty(0,dtype=int)
     for i in range(n):
-        p=[np.random.random() for i in range(2)]
-        if (-p[0]/2 + 0.75) <= p[1]:
-            p.append(1)
+        if (-X[0][i]/2 + 0.75) <= X[1][i]:
+            classes=np.append(classes,1)
         else:
-            p.append(-1)
-        dataset.append(p)
-    return dataset
+            classes=np.append(classes,-1)
+    return np.vstack((X,classes))
     
-def split(dataset, d_app_prop, nb_points):
-    return dataset[:int(d_app_prop*nb_points)], dataset[int(d_app_prop*nb_points):]
+def split(D):
+    return D[:,:int(0.8*len(D[0]))], D[:,int(0.8*len(D[0])):]
     
-def ptrain(d_app):
-    theta=np.random.rand(3)
+def ptrain(D_app):
+    theta=np.random.random((3,1))
     i=0
-    while i < len(d_app):
-        x_plus=np.append(d_app[i][:-1],1)
-        if sign(np.vdot(theta, x_plus))==d_app[i][2]:
+    while i < len(D_app[0]):
+        x_plus=np.concatenate((D_app[:-1,[i]],[[1]]),axis=0)
+        if sign(np.vdot(theta, x_plus))==D_app[2][i]:
             i+=1
         else:
-            theta=theta + d_app[i][2]*x_plus
+            theta=theta + D_app[2][i]*x_plus
             i=0
     return theta
     
 def ptest(x, theta):
-    x_plus=np.append(x[:-1],1)
+    x_plus=np.concatenate((x,[[1]]),axis=0)
     return sign(np.vdot(x_plus, theta))
 
-def error(data, theta):
+def get_test_err(n):
+    D=datagen(n)
+    D_app,D_test=split(D)
+    theta=ptrain(D_app)
+    aff_dataset(D,theta)
     cpt=0
-    for p in data:
-        real=p[-1] #classe réelle
-        pred=ptest(p,theta) #classe prédite
+    for i in range(len(D_test[0])):
+        real=D_test[-1,i] #classe réelle
+        pred=ptest(D_test[:-1,[i]],theta) #classe prédite
         if pred!=real:
             cpt+=1
-    return cpt/len(data)*100
+    return cpt/len(D_test[0])*100
 
 def sign(x):
     if x >= 0:
         return 1
     return -1
-    
-dataset=datagen(100)
-x_pos=[dataset[i][0] for i in range(100) if dataset[i][2]==1]
-y_pos=[dataset[i][1] for i in range(100) if dataset[i][2]==1]
-x_neg=[dataset[i][0] for i in range(100) if dataset[i][2]==-1]
-y_neg=[dataset[i][1] for i in range(100) if dataset[i][2]==-1]
-plt.plot(x_neg,y_neg,'.r',x_pos,y_pos,'.b')
-d_app,d_test=split(dataset,0.8,100)
-theta=ptrain(d_app)
-plt.plot([(-theta[0]*x - theta[2]) / theta[1] for x in range(2)], color="black")
 
-total = 0
-for i in range(100):
-    total += error(d_test,theta)
-print('Erreur de généralisation :',total/100,'%')
+def aff_dataset(D, theta):
+    x_pos=[D[0][i] for i in range(100) if D[2][i]==1]
+    y_pos=[D[1][i] for i in range(100) if D[2][i]==1]
+    x_neg=[D[0][i] for i in range(100) if D[2][i]==-1]
+    y_neg=[D[1][i] for i in range(100) if D[2][i]==-1]
+    plt.figure()
+    plt.plot(x_neg,y_neg,'.r',x_pos,y_pos,'.b')
+    D_app,D_test=split(D)
+    theta=ptrain(D_app)
+    plt.plot([(-theta[0]*x - theta[2]) / theta[1] for x in range(2)], 'k')
+
+err=list()
+for i in range(20):
+    print('i=',i)
+    err.append(get_test_err(100))
+print('Erreur de généralisation :',np.mean(err),'%')
