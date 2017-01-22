@@ -17,7 +17,7 @@ def datagen(n):
     return X[:, :int(0.2*n)], X[:, int(0.2*n):], c[:int(0.2*n)], c[int(0.2*n):]
 
 def ptrain_v2(X_train, c_train, nb_iter):
-    theta = np.random.random((3,1))
+    theta = np.random.random((len(X_train)+1,1))
     best_theta = theta
     best_err_train = get_err_train(X_train, c_train, theta)
     for n in range(nb_iter):
