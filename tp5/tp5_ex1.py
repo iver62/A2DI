@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jan 10 15:50:47 2017
-
-@author: deshayes
-"""
-
 import scipy as scipy
 
 data=scipy.io.loadmat('20news_w100.mat')
