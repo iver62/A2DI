@@ -8,7 +8,7 @@ c=data.target
 d,n=X.shape
 
 def extract(X, c):
-    X1 = np.array([X[:,i] for i in range(n) if c[i]==5 or c[i]==6],dtype=int)
+    X1 = np.array([X[:,i] for i in range(n) if c[i]==5 or c[i]==6], dtype=int)
     c1 = np.array([c[i] for i in range(n) if c[i]==5 or c[i]==6], dtype=int)
     c1 = np.sign(c1-np.mean(c1))
     return X1.T, c1
