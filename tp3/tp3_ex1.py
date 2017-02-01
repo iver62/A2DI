@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def datagen(n):
     X = np.random.random((2,n))
     c = np.zeros(n, dtype=int)
-    for i in range(X.shape[1]):
+    for i in range(n):
         d = np.abs(-0.5*X[0][i] - X[1][i] + 0.75) / (np.sqrt(np.square(0.5) + 1))
         theta = np.exp(-(np.square(d) / (2*np.square(0.05))))
         mistake = np.random.binomial(1,theta/2)
