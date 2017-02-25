@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cross_validation import train_test_split
-#from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
     
 def datagen(n):
     X = np.random.random((2,n))
@@ -25,27 +25,42 @@ def aff_dataset(X, c):
     x_neg=[X[0][i] for i in range(n) if c[i] == 0]
     y_neg=[X[1][i] for i in range(n) if c[i] == 0]
     plt.plot(x_neg,y_neg,'.r',x_pos,y_pos,'.b')
-      
-def fold_data(X, c):
+
+def fold(X, c):
     X_train, X_test, c_train, c_test = train_test_split(X.T, c, test_size=0.2)
     return X_train.T, X_test.T, c_train, c_test
     
-def batch(X_train, c_train, eta):
-    d,n = X_train.shape
+def gradient_descent(X_train, c_train, eta, max_iterations):
+    d, n = X_train.shape
     X_plus = np.vstack((X_train, np.ones(n)))
-    thetas = np.zeros((d+1,526))
+    thetas = np.zeros((d+1, max_iterations))
     theta = np.random.random(d+1)
     cpt = 0
-    while cpt<526:
+    while cpt < max_iterations:
         err = np.zeros(n)
         for i in range(n):
-            pred = sgm(np.dot(X_plus[:,i].T,theta))
+            pred = sgm(np.dot(X_plus[:,i].T, theta))
             err[i] = pred - c_train[i]
         g = np.dot(X_plus, err)
-#        print(g)
         theta -= eta * g
-#        print(theta)
-        thetas[:,cpt] = theta
+        thetas[:, cpt] = theta
+        cpt += 1
+    return thetas
+    
+def newton_gradient_descent(X_train, c_train, eta, max_iterations):
+    d, n = X_train.shape
+    X_plus = np.vstack((X_train, np.ones(n)))
+    thetas = np.zeros((d+1, max_iterations))
+    theta = np.random.random(d+1)
+    cpt = 0
+    while cpt < max_iterations:
+        err = np.zeros(n)
+        for i in range(n):
+            pred = sgm(np.dot(X_plus[:,i].T, theta))
+            err[i] = pred - c_train[i]
+        g = np.dot(X_plus, err)
+        theta -= eta * g
+        thetas[:, cpt] = theta
         cpt += 1
     return thetas
 
@@ -60,7 +75,9 @@ def visualize(thetas):
 
 X, c = datagen(300)        
 aff_dataset(X, c)
-X_train, X_test, c_train, c_test = fold_data(X, c)
+X_train, X_test, c_train, c_test = fold(X, c)
 #X_plus = np.vstack((X, np.ones(X.shape[1])))
-thetas = batch(X_train, c_train, 0.02)
-visualize(thetas)
+thetas1 = gradient_descent(X_train, c_train, 0.02)
+visualize(thetas1)
+thetas2 = gradient_descent(X_train, c_train, 0.1)
+visualize(thetas2)

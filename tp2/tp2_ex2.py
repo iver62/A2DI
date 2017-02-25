@@ -1,19 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
-#from . tp1.tp1_ex2 import ptrain, ptest
+from sklearn.cross_validation import train_test_split
+#import sys
+#sys.path.append('C:/Users/Pierrick/Desktop/A2DI/tp1')
+#from tp1_ex2 import ptrain, ptest
 
 def datagen(n):
-    X = np.random.random((2,n))
+    X = np.random.random((2, n))
     c = np.zeros(n, dtype=int)
-    for i in range(X.shape[1]):
+    for i in range(n):
         if (-X[0][i]/2 + 0.75) <= X[1][i]:
             c[i] = 1
         else:
             c[i] = -1
-    return X[:, :int(0.1*n)], X[:, int(0.1*n):], c[:int(0.1*n)], c[int(0.1*n):]
+    return train_test_split(X.T, c, test_size=0.9)
     
 def get_test_err(n):
     X_train, X_test, c_train, c_test = datagen(n)
+    X_train = X_train.T
+    X_test = X_test.T
     theta = ptrain(X_train, c_train)
     cpt = 0
     for i in range(X_test.shape[1]):
@@ -24,10 +29,10 @@ def get_test_err(n):
     return cpt / X_test.shape[1] * 100
 
 def ptrain(X_train, c_train):
-    theta=np.random.random((3,1))
-    i=0
+    theta = np.random.random((3,1))
+    i = 0
     while i < X_train.shape[1]:
-        x_plus=np.concatenate((X_train[:,[i]],[[1]]),axis=0)
+        x_plus=np.concatenate((X_train[:,[i]],[[1]]), axis=0)
         if sign(np.vdot(theta, x_plus)) == c_train[i]:
             i += 1
         else:
@@ -45,8 +50,8 @@ def ptest(x, theta):
     return sign(np.vdot(x_plus, theta))
 
 
-err=list()
-maxi=25
+err=[]
+maxi=20
 bin_size=0.5
 bins=np.arange(0.0,np.ceil(maxi+1),bin_size)
 bin_centers=bins[:-1]+bin_size/2
@@ -56,8 +61,8 @@ perr=np.ones(bin_centers.shape)
 #while crit < 0.001:
 for i in range(20):
     err.append(get_test_err(445))
-perr_old=perr
-(perr,bins_out) = np.histogram(err, bins=bins, normed=True)
+#perr_old=perr
+(perr, bins_out) = np.histogram(err, bins=bins, density=True)
 #crit = np.max(np.abs(perr-perr_old))
 #count += 1
     
